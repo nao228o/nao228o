@@ -1,7 +1,7 @@
 from time import sleep
 
 from selenium import webdriver
-from selenium.webdriver.options import Options
+from selenium.webdriver.chrome.options import Options
 
 chrome_path = "/Users/tsushima/Desktop/ScrapingBeginner-main/chromedriver 3"
 
