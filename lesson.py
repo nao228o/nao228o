@@ -11,20 +11,22 @@ options = Options()
 options.add_argument('--incognito')
 
 driver = webdriver.Chrome(executable_path=chrome_path, options=options)
-driver.get('https://hitosara.com/aichi/lst/')
+base_url = "https://hitosara.com/aichi/lst/"
+driver.get(base_url)
 
 sleep(3)
 
-element = driver.find_element(By.CLASS_NAME, 'shop-info-wrapper')
+elements = driver.find_elements(By.CLASS_NAME, 'shop-info-wrapper')
+element = elements[0]
 aTag    = element.find_element(By.TAG_NAME, 'a')
 url     = aTag.get_attribute('href')
 print('test1 OK!!')
 
-driver2 = driver.get(url)
+driver.get(url)
 
 sleep(3)
 
-shop_info = driver2.find_element(By.CLASS_NAME, 'shop_info')
+shop_info = driver.find_element(By.CLASS_NAME, 'shop_info')
 elems_th = shop_info.find_elements(By.TAG_NAME, 'th')
 keys = []
 for elem_th in elems_th:
@@ -49,6 +51,6 @@ df.to_csv("ヒトサラ.csv", index=False)
 
 driver.back()
 
-sleep(2)
+sleep(5)
 
 driver.quit()
