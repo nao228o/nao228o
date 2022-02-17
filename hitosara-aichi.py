@@ -70,16 +70,12 @@ for shop_url in shop_urls:
             tel_info = value.find_elements(By.TAG_NAME, 'p')
             shop_number = value.find_elements(By.TAG_NAME, 'p')[1]
             shop_number2 = value.find_elements(By.TAG_NAME, 'p')[0]
-            print(len(shop_number.text))
-            print(len(shop_number2.text))
+            
             if len(shop_number.text) < 15:
                 d_list['電話番号'] = shop_number.text
-                print(shop_number.text)
                 d_list['電話番号2'] = shop_number2.text
-                print(shop_number2.text)
             else:
                 d_list['電話番号'] = shop_number2.text
-                print(shop_number2.text)
         elif key.text == '最寄駅':
             d_list['最寄駅'] = value.text
         elif key.text == 'アクセス':
