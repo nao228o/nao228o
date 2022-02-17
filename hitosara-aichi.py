@@ -13,7 +13,7 @@ options.add_argument('--incognito')
 driver = webdriver.Chrome(executable_path=chrome_path, options=options)
 base_url = "https://hitosara.com/aichi/lst/?page={}"
 shop_urls = []
-for i in range(1,2):
+for i in range(1,200):
     target_url = base_url.format(i)
 
     driver.get(target_url)
@@ -27,7 +27,6 @@ for i in range(1,2):
         url     = aTag.get_attribute('href')
         shop_urls.append(url)
         print("店舗urlの数:",len(shop_urls))
-        sleep(1)
 
 
 d = []
@@ -38,7 +37,8 @@ for shop_url in shop_urls:
 
     d_list = {}
     d_list['店名'] = None
-    d_list['TEL'] = None
+    d_list['電話番号'] = None
+    d_list['電話番号2'] = None
     d_list['最寄駅'] = None
     d_list['アクセス'] = None
     d_list['住所'] = None
@@ -46,12 +46,12 @@ for shop_url in shop_urls:
     d_list['定休日'] = None
     d_list['感染症対策'] = None
     d_list['平均予算'] = None
-    d_list['クレジット\nカード'] = None
+    d_list['クレジットカード'] = None
     d_list['その他決済'] = None
     d_list['キャパシティ'] = None
     d_list['席数形態'] = None
     d_list['駐車場'] = None
-    d_list['テイクアウト・\nデリバリー'] = None
+    d_list['テイクアウト・デリバリー'] = None
     d_list['禁煙・喫煙'] = None
     d_list['こだわり'] = None
     d_list['ホームページ'] = None
@@ -67,7 +67,19 @@ for shop_url in shop_urls:
         if key.text == '店名':
             d_list['店名'] = value.text
         elif key.text == 'TEL':
-            d_list['TEL'] = value.text
+            tel_info = value.find_elements(By.TAG_NAME, 'p')
+            shop_number = value.find_elements(By.TAG_NAME, 'p')[1]
+            shop_number2 = value.find_elements(By.TAG_NAME, 'p')[0]
+            print(len(shop_number.text))
+            print(len(shop_number2.text))
+            if len(shop_number.text) < 15:
+                d_list['電話番号'] = shop_number.text
+                print(shop_number.text)
+                d_list['電話番号2'] = shop_number2.text
+                print(shop_number2.text)
+            else:
+                d_list['電話番号'] = shop_number2.text
+                print(shop_number2.text)
         elif key.text == '最寄駅':
             d_list['最寄駅'] = value.text
         elif key.text == 'アクセス':
@@ -83,7 +95,7 @@ for shop_url in shop_urls:
         elif key.text == '平均予算':
             d_list['平均予算'] = value.text
         elif key.text == 'クレジット\nカード':
-            d_list['クレジット\nカード'] = value.text
+            d_list['クレジットカード'] = value.text
         elif key.text == 'その他決済':
             d_list['その他決済'] = value.text
         elif key.text == 'キャパシティ':
@@ -93,7 +105,7 @@ for shop_url in shop_urls:
         elif key.text == '駐車場':
             d_list['駐車場'] = value.text
         elif key.text == 'テイクアウト・\nデリバリー':
-            d_list['テイクアウト・\nデリバリー'] = value.text
+            d_list['テイクアウト・デリバリー'] = value.text
         elif key.text == '禁煙・喫煙':
             d_list['禁煙・喫煙'] = value.text
         elif key.text == 'こだわり':
@@ -107,14 +119,10 @@ for shop_url in shop_urls:
 
     d.append(d_list)
 
-    sleep(1)
-
 df = pd.DataFrame(d)
 df.head()
 df.to_csv("ヒトサラ.csv", index=False)
 
 driver.back()
-
-sleep(5)
 
 driver.quit()
